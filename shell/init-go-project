@@ -1,0 +1,31 @@
+#!/bin/bash
+
+setupDevContainer() {
+  mkdir $1/.devcontainer
+  wget -q https://raw.githubusercontent.com/maxc0d3r/godevcontainer/master/.devcontainer/devcontainer.json -P $1/.devcontainer
+  wget -q https://raw.githubusercontent.com/maxc0d3r/godevcontainer/master/.devcontainer/docker-compose.yml -P $1/.devcontainer
+  wget -q https://raw.githubusercontent.com/maxc0d3r/godevcontainer/master/.devcontainer/.dockerignore -P $1/.devcontainer
+  wget -q https://raw.githubusercontent.com/maxc0d3r/godevcontainer/master/.devcontainer/Dockerfile -P $1/.devcontainer
+
+  echo "Copied devcontainer template to $1/.devcontainer"
+  echo "Feel free to modify it as per your convenience"
+}
+
+if [ -z $1 ]; then
+  projectPath="$(pwd)"
+else
+  case $1 in
+    /*) projectPath=$1;;
+    *)  projectPath=$(pwd)/$1;;
+  esac
+fi
+
+echo "Setting up .devcontainer at $projectPath"
+
+if [ -d $projectPath ]; then
+  setupDevContainer $projectPath
+else
+  mkdir -p $projectPath
+  setupDevContainer $projectPath
+fi
+  
